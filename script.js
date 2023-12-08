@@ -6,8 +6,8 @@ window.addEventListener("load", () => {
     let addBtns = document.querySelectorAll(".add-zone");
     let smokeBtn = document.querySelector("#smk-btn");
     let dualBtn = document.querySelector("#dual-btn");
-    let smokeContainer = document.querySelector(".container-smokes");
-    let ClipContainer = document.querySelector(".container-CLIP");
+    let smokeContainer = document.querySelector(".smokes");
+    let ClipContainer = document.querySelector(".clip");
     let zonesContainer;
     let smokeCounter = 0;
     let ClipCounter = 100;
@@ -20,13 +20,13 @@ window.addEventListener("load", () => {
             
             let zoneIndex;
 
-            if (zonesContainer.parentElement.classList.contains("container-CLIP") && ClipCounter < 200) {
+            if (zonesContainer.parentElement.classList.contains("clip") && ClipCounter < 200) {
                 ClipCounter++;
-                addZone(zonesContainer, ClipCounter);
+                addZone(zonesContainer, ClipCounter, addBtn);
             }
-            if (zonesContainer.parentElement.classList.contains("container-smokes") && smokeCounter < 100) {
+            if (zonesContainer.parentElement.classList.contains("smokes") && smokeCounter < 100) {
                 smokeCounter++;
-                addZone(zonesContainer, smokeCounter);
+                addZone(zonesContainer, smokeCounter, addBtn);
             }
 
             console.log(`clip:${ClipCounter}\nsmoke: ${smokeCounter}`);
@@ -66,11 +66,13 @@ function generateCsv() {
     window.open(encodedUri);
 }
 
-function addZone(container, counter) {
+function addZone(container, counter, btnToScrollTo) {
     container.insertAdjacentHTML("beforeend", 
     `<div class="row">
         <label for="zone">Zone ${counter}:</label>
         <input maxlength="20" type="text" class="tag1">
         <input maxlength="20" type="text" class="tag2">
     </div>`)
+    btnToScrollTo.scrollIntoView()
+    
 }

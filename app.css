@@ -4,6 +4,9 @@ body {
     font-size: 1.3rem;
     
 }
+button {
+    padding: 0.4rem;
+}
 
 .menu-btns-cont {
     display: flex;
@@ -44,10 +47,15 @@ body {
 }
 
 
-.container-CLIP{
+.container {
     margin-bottom: 50px;
 }
 
+add-btn-container{
+    display: flex;
+    width: 100%;
+    background-color: red;
+}
 
 
 
