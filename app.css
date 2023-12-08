@@ -1,5 +1,6 @@
 body {
     font-family: "Open Sans";
+    font-size: 1.3rem;
 }
 
 .menu-btns-cont {
@@ -14,4 +15,28 @@ body {
 .disabled{
     display:none;
 }
+
+.zones-list{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.row{
+    padding: 1% 5% 1% 5%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+
+
+}
+
+.row input {
+    margin-top: 5px;
+    
+}
+
+
+
+
 

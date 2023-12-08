@@ -1,3 +1,5 @@
+let smokeHeatZones = [];
+
 
 window.addEventListener("load", () => {
     console.log("page loaded");
@@ -65,12 +67,10 @@ function generateCsv() {
 }
 
 function addZone(container, counter) {
-    container.insertAdjacentHTML("beforeend", `<div class="row">
-    <div class="">
+    container.insertAdjacentHTML("beforeend", 
+    `<div class="row">
         <label for="zone">Zone ${counter}:</label>
         <input maxlength="20" type="text" class="tag1">
         <input maxlength="20" type="text" class="tag2">
-    </div>
-    
     </div>`)
 }
