@@ -1,3 +1,7 @@
+body {
+    font-family: "Open Sans";
+}
+
 .menu-btns-cont {
 
     position: fixed;
@@ -10,3 +14,4 @@
 .disabled{
     display:none;
 }
+
