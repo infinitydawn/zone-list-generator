@@ -53,11 +53,15 @@ button {
 }
 
 .add-btn-container{
+    position: sticky;
+    bottom: 40px;
     display: flex;
     width: 100%;
     justify-content: center;
     margin-bottom: 50px;
 }
+
+
 
 
 
