@@ -3,7 +3,7 @@ let smokeHeatZones = [];
 
 window.addEventListener("load", () => {
     console.log("page loaded");
-    let addBtns = document.querySelectorAll(".add-zone");
+    let addBtn = document.querySelector(".add-zone");
     let smokeBtn = document.querySelector("#smk-btn");
     let dualBtn = document.querySelector("#dual-btn");
     let smokeContainer = document.querySelector(".smokes");
@@ -13,27 +13,23 @@ window.addEventListener("load", () => {
     let ClipCounter = 100;
 
 
-    addBtns.forEach(addBtn => {
-        addBtn.addEventListener("click", () => {
-            zonesContainer = addBtn.parentElement.parentElement.querySelector(".zones-list");
 
-            
-            let zoneIndex;
+    addBtn.addEventListener("click", () => {
+        zonesContainer = document.querySelector(".container:not(.disabled)");
+        if (zonesContainer.classList.contains("clip") && ClipCounter < 200) {
+            ClipCounter++;
+            addZone(zonesContainer, ClipCounter, addBtn);
+        }
+        if (zonesContainer.classList.contains("smokes") && smokeCounter < 100) {
+            smokeCounter++;
+            addZone(zonesContainer, smokeCounter, addBtn);
+        }
 
-            if (zonesContainer.parentElement.classList.contains("clip") && ClipCounter < 200) {
-                ClipCounter++;
-                addZone(zonesContainer, ClipCounter, addBtn);
-            }
-            if (zonesContainer.parentElement.classList.contains("smokes") && smokeCounter < 100) {
-                smokeCounter++;
-                addZone(zonesContainer, smokeCounter, addBtn);
-            }
+        console.log(`clip:${ClipCounter}\nsmoke: ${smokeCounter}`);
 
-            console.log(`clip:${ClipCounter}\nsmoke: ${smokeCounter}`);
+    })
 
-        })
 
-    });
 
 
 
@@ -67,12 +63,12 @@ function generateCsv() {
 }
 
 function addZone(container, counter, btnToScrollTo) {
-    container.insertAdjacentHTML("beforeend", 
-    `<div class="row">
+    container.insertAdjacentHTML("beforeend",
+        `<div class="row">
         <label for="zone">Zone ${counter}:</label>
         <input maxlength="20" type="text" class="tag1">
         <input maxlength="20" type="text" class="tag2">
     </div>`)
     btnToScrollTo.scrollIntoView()
-    
+
 }
