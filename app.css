@@ -1,9 +1,10 @@
-
 body {
     font-family: "Open Sans";
     font-size: 1.3rem;
-    
+
+
 }
+
 button {
     width: 10rem;
 }
@@ -11,29 +12,29 @@ button {
 .menu-btns-cont {
     display: flex;
     padding: 0.35em 0 0.35em 0;
-   
-    
+
+
     position: fixed;
     bottom: 1px;
-    
+
     width: 100%;
-    background-color: black;
 
-   justify-content: space-around;
-   
+
+    justify-content: space-around;
+
 }
 
-.disabled{
-    display:none;
+.disabled {
+    display: none;
 }
 
-.zones-list{
+.zones-list {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
 }
 
-.row{
+.row {
     padding: 1% 5% 1% 5%;
     display: flex;
     flex-direction: column;
@@ -44,7 +45,7 @@ button {
 
 .row input {
     margin-top: 5px;
-    
+
 }
 
 
@@ -52,19 +53,38 @@ button {
     margin-bottom: 5px;
 }
 
-.add-btn-container{
+.add-btn-container {
     position: sticky;
-    bottom: 40px;
+    bottom: 65px;
     display: flex;
     width: 100%;
     justify-content: center;
-    margin-bottom: 50px;
+    margin-bottom: 80px;
 }
 
 
+.zone-number {
+    border: none;
+    width: auto;
+    font-size: 1.3rem;
+}
 
+.button {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 7px 26px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
 
-
-
-
-
+    background: #04AA6D;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(10.5px);
+    -webkit-backdrop-filter: blur(10.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}

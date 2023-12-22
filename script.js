@@ -1,4 +1,11 @@
 let smokeHeatZones = [];
+let smokeHeatObjects = [];
+
+let zoneObj = {
+    tag1: "tag1",
+    tag2: "tag2",
+    zoneNumber: 0
+}
 
 
 window.addEventListener("load", () => {
@@ -65,10 +72,86 @@ function generateCsv() {
 function addZone(container, counter, btnToScrollTo) {
     container.insertAdjacentHTML("beforeend",
         `<div class="row">
-        <label for="zone">Zone ${counter}:</label>
+        <label for="zone">Zone <input maxlength="3" size="1" class="zone-number" value="${counter}"></input></label>
         <input maxlength="20" type="text" class="tag1">
         <input maxlength="20" type="text" class="tag2">
     </div>`)
     btnToScrollTo.scrollIntoView()
 
 }
+
+
+
+// return zone number if it exists, else return null
+function getZone(objArray, newZone) {
+    let matchedZone = null;
+    objArray.forEach(obj => {
+        if (obj.zoneNumber === newZone) {
+            matchedZone = obj;
+
+        }
+    });
+
+    return matchedZone;
+
+}
+
+
+
+
+//return next available zone address in the array
+function getNextAvailableZone(objArray) {
+
+}
+
+// let testArr = [{
+//     tag1: "",
+//     tag2: "",
+//     zoneNumber : 1},
+// {
+//     tag1: "",
+//     tag2: "",
+//     zoneNumber: 5
+// }, {
+//     tag1: "",
+//     tag2: "",
+//     zoneNumber: 23
+// }, {
+//     tag1: "",
+//     tag2: "",
+//     zoneNumber: 4
+// }, {
+//     tag1: "",
+//     tag2: "",
+//     zoneNumber: 18
+// }]
+
+// sort zone objects in ascending order by zone number
+function bubbleSort(arr) {
+    let i, j;
+    let len = arr.length;
+
+    let isSwapped = false;
+
+    for (i = 0; i < len; i++) {
+
+        isSwapped = false;
+
+        for (j = 0; j < (len - i - 1); j++) {
+            if (arr[j].zoneNumber > arr[j + 1].zoneNumber) {
+                let temp = arr[j]
+                arr[j] = arr[j + 1];
+                arr[j + 1] = temp;
+                isSwapped = true;
+            }
+        }
+
+
+        if (!isSwapped) {
+            break;
+        }
+    }
+
+}
+
+
