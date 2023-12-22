@@ -88,3 +88,20 @@ button {
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
+
+
+
+.input {
+    font-size: 16px;
+    
+    font-size: Max(16px, 1em);
+    font-family: inherit;
+    padding: 0.25em 0.5em;
+    background-color: #fff;
+    border: 2px solid gray;
+    border-radius: 4px;
+    transition: 180ms box-shadow ease-in-out;
+  }
+  
+ 
+  
