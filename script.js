@@ -72,23 +72,23 @@ window.addEventListener("load", () => {
     addBtn.addEventListener("click", () => {
         zonesContainer = document.querySelector(".container:not(.disabled)");
 
-        if (zonesContainer.classList.contains("clip") && clipObjects.length < 100) {
+        if (zonesContainer.classList.contains("clip") && clipObjects.length < 99) {
             let nextClip = getNextAvailableZone(clipObjects);
             //addZone(zonesContainer, nextClip, addBtn);
             populateArray(nextClip,clipObjects);
             bubbleSort(clipObjects);
             displayArray(ClipContainer,clipObjects, nextClip);
             
-        }
+        } else if (zonesContainer.classList.contains("clip")){window.alert("No more available CLIP zones!")}
 
-        if (zonesContainer.classList.contains("smokes") && smokeHeatObjects.length < 100) {
+        if (zonesContainer.classList.contains("smokes") && smokeHeatObjects.length < 99) {
             let nextSmokeHeat = getNextAvailableZone(smokeHeatObjects);
             //addZone(zonesContainer, nextSmokeHeat, addBtn);
             populateArray(nextSmokeHeat,smokeHeatObjects);
             bubbleSort(smokeHeatObjects);
             displayArray(smokeContainer,smokeHeatObjects,nextSmokeHeat);
             
-        }
+        } else if (zonesContainer.classList.contains("smokes")) {window.alert("No more available smoke zones!")}
 
     })
 
