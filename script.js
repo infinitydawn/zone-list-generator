@@ -224,7 +224,7 @@ function addZone(container, zoneNumber, btnToScrollTo) {
     container.insertAdjacentHTML("beforeend",
         `<div class="row">
         <label for="zone">Zone 
-            <input maxlength="3" size="1" class="zone-number" value="${zoneNumber}"></input>
+            <input maxlength="3" class="zone-number" value="${zoneNumber}"></input>
         </label>
         <input maxlength="20" type="text" class="tag1 input">
         <input maxlength="20" type="text" class="tag2 input">
