@@ -192,7 +192,7 @@ function displayArray(container, objArray,nextClip) {
         newElements += `
         <div class="row">
             <label for="zone">Zone 
-                <input maxlength="3" size="1" style="width:20em" class="zone-number" value="${element.zoneNumber}"></input>
+                <input maxlength="3" class="zone-number" value="${element.zoneNumber}"></input>
             </label>
             <input maxlength="20" type="text" class="tag1 input" value="${element.tag1}">
             <input maxlength="20" type="text" class="tag2 input" value="${element.tag2}">
