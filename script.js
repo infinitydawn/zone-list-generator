@@ -1,3 +1,4 @@
+// Test Data
 let clipObjects = [{
     tag1: "Pull Station",
     tag2: "Cellar Mech Rm",
@@ -58,6 +59,9 @@ window.addEventListener("load", () => {
     let smokeContainer = document.querySelector(".smokes");
     let ClipContainer = document.querySelector(".clip");
     let zonesContainer;
+
+    listenInputChange(smokeContainer.querySelector(".zones-list"));
+    listenInputChange(ClipContainer.querySelector(".zones-list"));
 
     bubbleSort(clipObjects);
     bubbleSort(smokeHeatObjects);
@@ -192,11 +196,13 @@ function displayArray(container, objArray,nextClip) {
         newElements += `
         <div class="row">
             <label for="zone">Zone 
-                <input maxlength="3" class="zone-number" value="${element.zoneNumber}"></input>
+                <input maxlength="3" class="zone-number input-field" value="${element.zoneNumber}"></input>
             </label>
-            <input maxlength="20" type="text" class="tag1 input" value="${element.tag1}">
-            <input maxlength="20" type="text" class="tag2 input" value="${element.tag2}">
+            <input maxlength="20" type="text" class="tag1 input-tag input-field" value="${element.tag1}">
+            <input maxlength="20" type="text" class="tag2 input-tag input-field" value="${element.tag2}">
         </div>`;
+
+    
     });
 
     container.querySelector(".zones-list").innerHTML = newElements;
@@ -211,6 +217,25 @@ function displayArray(container, objArray,nextClip) {
         
     
 } // end displayArray()
+
+
+
+
+// handle input changes in the containers
+function listenInputChange(container){
+    container.addEventListener('change', (event) => {
+        if (event.target.classList.contains('input-field')) {
+            console.log("change registered")
+            // TODO 
+            // 1. Update code to handle tag vs zone changes
+            // 2. write a method to mutate array on tag changes
+            // 3. write function to search an element upon change
+            // 4. write function to swap two elements of array
+        }
+        
+    });
+
+}
 
 
 
