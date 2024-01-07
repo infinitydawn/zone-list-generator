@@ -51,8 +51,7 @@ let smokeHeatObjects = [
 
 //Code entry point
 window.addEventListener("load", () => {
-    console.log("page loaded");
-    
+
     let addBtn = document.querySelector(".add-zone");
     let smokeBtn = document.querySelector("#smk-btn");
     let dualBtn = document.querySelector("#dual-btn");
@@ -67,8 +66,8 @@ window.addEventListener("load", () => {
     bubbleSort(smokeHeatObjects);
 
 
-    displayArray(smokeContainer,smokeHeatObjects,1);
-    displayArray(ClipContainer,clipObjects,1);
+    displayArray(smokeContainer, smokeHeatObjects, 1);
+    displayArray(ClipContainer, clipObjects, 1);
 
 
 
@@ -79,20 +78,20 @@ window.addEventListener("load", () => {
         if (zonesContainer.classList.contains("clip") && clipObjects.length < 99) {
             let nextClip = getNextAvailableZone(clipObjects);
             //addZone(zonesContainer, nextClip, addBtn);
-            populateArray(nextClip,clipObjects);
+            populateArray(nextClip, clipObjects);
             bubbleSort(clipObjects);
-            displayArray(ClipContainer,clipObjects, nextClip);
-            
-        } else if (zonesContainer.classList.contains("clip")){window.alert("No more available CLIP zones!")}
+            displayArray(ClipContainer, clipObjects, nextClip);
+
+        } else if (zonesContainer.classList.contains("clip")) { window.alert("No more available CLIP zones!") }
 
         if (zonesContainer.classList.contains("smokes") && smokeHeatObjects.length < 99) {
             let nextSmokeHeat = getNextAvailableZone(smokeHeatObjects);
             //addZone(zonesContainer, nextSmokeHeat, addBtn);
-            populateArray(nextSmokeHeat,smokeHeatObjects);
+            populateArray(nextSmokeHeat, smokeHeatObjects);
             bubbleSort(smokeHeatObjects);
-            displayArray(smokeContainer,smokeHeatObjects,nextSmokeHeat);
-            
-        } else if (zonesContainer.classList.contains("smokes")) {window.alert("No more available smoke zones!")}
+            displayArray(smokeContainer, smokeHeatObjects, nextSmokeHeat);
+
+        } else if (zonesContainer.classList.contains("smokes")) { window.alert("No more available smoke zones!") }
 
     })
 
@@ -137,7 +136,7 @@ function getNextAvailableZone(objArray) {
 
 
 // Insert A New Object into array
-function populateArray(index, objArray){
+function populateArray(index, objArray) {
     objArray.splice(index, 0, {
         tag1: "",
         tag2: "",
@@ -181,7 +180,13 @@ function bubbleSort(arr) {
 
 
 
+function setOldValue(element){
+    element.setAttribute("oldvalue",element.value);
 
+    for (let attr of element.attributes) {
+        console.log(`${attr.name}: ${attr.value}`);
+    }
+}
 
 
 
@@ -189,53 +194,123 @@ function bubbleSort(arr) {
 
 
 // display html DOM
-function displayArray(container, objArray,nextClip) {
+function displayArray(container, objArray, nextClip) {
     let newElements = '';
 
     objArray.forEach(element => {
         newElements += `
         <div class="row">
             <label for="zone">Zone 
-                <input maxlength="3" class="zone-number input-field" value="${element.zoneNumber}"></input>
+                <input maxlength="3" class="zone-number input-field" value="${element.zoneNumber}" oldValue ="" onfocus="setOldValue(this)"></input>
             </label>
             <input maxlength="20" type="text" class="tag1 input-tag input-field" value="${element.tag1}">
             <input maxlength="20" type="text" class="tag2 input-tag input-field" value="${element.tag2}">
         </div>`;
 
-    
+
     });
 
     container.querySelector(".zones-list").innerHTML = newElements;
 
-    
-    let zoneNumberFields = Array.apply(null, document.querySelectorAll(".zone-number"));
-    let scrollTargetElem = zoneNumberFields.find(elem=> elem.value == nextClip);//((elem) => elem.attributes.value.nodeValue === `${nextClip}`)
 
-    console.log(`scroll target:${scrollTargetElem}`);
-    console.log(`next clip:${nextClip}`);
+    let zoneNumberFields = Array.apply(null, document.querySelectorAll(".zone-number"));
+    let scrollTargetElem = zoneNumberFields.find(elem => elem.value == nextClip);//((elem) => elem.attributes.value.nodeValue === `${nextClip}`)
+
     scrollTargetElem.scrollIntoView();
-        
-    
 } // end displayArray()
 
 
 
 
 // handle input changes in the containers
-function listenInputChange(container){
+function listenInputChange(container) {
     container.addEventListener('change', (event) => {
+        console.log(event.recent);
         if (event.target.classList.contains('input-field')) {
-            console.log("change registered")
+
+            if (event.target.classList.contains('zone-number')) {
+                handleZoneChange(event.target.closest(".row"));
+            }
+            if (event.target.classList.contains('tag1')) {
+                console.log("tag 1 change registered")
+            }
+            if (event.target.classList.contains('tag2')) {
+                console.log("tag 2 change registered")
+            }
             // TODO 
             // 1. Update code to handle tag vs zone changes
             // 2. write a method to mutate array on tag changes
             // 3. write function to search an element upon change
             // 4. write function to swap two elements of array
         }
-        
+
     });
+} // end listenInputChange()
+
+
+
+
+
+// find if given zone is in array
+function handleZoneChange(input) {
+    let container = input.closest(".container")
+    console.log(`container is: ${container}`);
+    let type = Array.from(container.classList).filter(className => className !== "container")[0];
+    let newZoneNumber = input.querySelector(".zone-number").value;
+    console.log(`new zone number: ${newZoneNumber}`)
+
+
+    switch (type) {
+        case "clip":
+            let clipZone = clipObjects.find(zone => zone.zoneNumber === newZoneNumber);
+            if (clipZone != undefined) {
+                console.log(`CLIP zone ${clipZone.zoneNumber} exists`)
+                // swap zones
+                // make temp = old
+                // old = new
+                // new = temp
+                // display dom
+            }
+            else {
+                // make a new zone 
+                
+                let newTag1 = input.querySelector(".tag1").value;
+                let newTag2 = input.querySelector(".tag2").value;
+                let oldZoneNumber = input.querySelector(".zone-number").getAttribute("oldvalue");
+
+                let oldZoneObject = clipObjects.findIndex(obj => obj.zoneNumber == oldZoneNumber)
+                
+                clipObjects.splice(oldZoneObject,1);
+                
+
+                clipObjects.push({
+                    tag1: newTag1,
+                    tag2: newTag2,
+                    zoneNumber: parseInt(newZoneNumber)
+                })
+            }
+
+            break;
+            
+        case "smokes":
+            console.log("smoke");
+    }
+
+    bubbleSort(clipObjects);
+    displayArray(container, clipObjects, 1);
+} //end findZone()
+
+
+
+
+function swapZones(array, zone1, zone2) {
+
 
 }
+
+
+
+//findZone("smoke");
 
 
 
