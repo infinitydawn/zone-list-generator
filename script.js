@@ -242,7 +242,10 @@ function listenInputChange(container) {
                 console.log("tag 2 change registered")
             }
             // TODO 
-            // block if zone number too hugh
+            // block if zone number too high
+            // add webstorage
+            // add projects system
+            // add popup system
         }
 
     });
