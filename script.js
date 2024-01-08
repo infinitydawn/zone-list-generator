@@ -51,6 +51,34 @@ let smokeHeatObjects = [
 
 //Code entry point
 window.addEventListener("load", () => {
+    // MODAL CODE --------------------------------------------------------------
+    // Get the modal
+    let modal = document.querySelector("#myModal");
+
+    // Get the button that opens the modal
+    let btn = document.querySelector("#myBtn");
+
+    // Get the <span> element that closes the modal
+    let span = document.querySelectorAll(".close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // -------------------------------------------------------------------------
 
     let addBtn = document.querySelector(".add-zone");
     let smokeBtn = document.querySelector("#smk-btn");
@@ -217,7 +245,7 @@ function displayArray(container, objArray, nextClip) {
 
 
     let zoneNumberFields = Array.apply(null, document.querySelectorAll(".zone-number"));
-    let scrollTargetElem = zoneNumberFields.find(elem => elem.value == nextClip) ?? zoneNumberFields[zoneNumberFields.length-1];
+    let scrollTargetElem = zoneNumberFields.find(elem => elem.value == nextClip) ?? zoneNumberFields[zoneNumberFields.length - 1];
 
     scrollTargetElem.scrollIntoView();
 } // end displayArray()
@@ -230,22 +258,21 @@ function listenInputChange(container) {
     container.addEventListener('change', (event) => {
         if (event.target.classList.contains('input-field')) {
 
-            if (event.target.classList.contains('zone-number')) {
-                routeZoneChange(event.target.closest(".row"));
-            }
-            if (event.target.classList.contains('tag1')) {
-                // TODO 
-                console.log("tag 1 change registered")
-            }
-            if (event.target.classList.contains('tag2')) {
-                // TODO 
-                console.log("tag 2 change registered")
-            }
-            // TODO 
-            // block if zone number too high
-            // add webstorage
-            // add projects system
-            // add popup system
+            // if (event.target.classList.contains('zone-number')) {
+            //     routeZoneChange(event.target.closest(".row"));
+            // }
+            // if (event.target.classList.contains('input-tag')) {
+            //     // TODO 
+            //     console.log("tag change registered")
+            // }
+
+            // // TODO 
+            // // block if zone number too high
+            // // add webstorage
+            // // add projects system
+            // // add popup system
+
+            categorizeRowChange(event.target);
         }
 
     });
@@ -255,31 +282,48 @@ function listenInputChange(container) {
 
 
 
+
 // decide what type of zone is changed (ZC1)
-function routeZoneChange(rowElement) {
-    let container = rowElement.closest(".container")
+function categorizeRowChange(target) {
+    let container = target.closest(".container")
     let type = Array.from(container.classList).filter(className => className !== "container")[0];
-    
+
 
 
 
     switch (type) {
         case "clip":
-            handleZoneChange(rowElement, clipObjects)
+            categorizeChangeTarget(target, clipObjects)
             break;
 
         case "smokes":
-            handleZoneChange(rowElement, smokeHeatObjects)
+            categorizeChangeTarget(target, smokeHeatObjects)
             break;
     }
 
-    
+
 } //end routeZoneChange()
 
 
+// (ZC2)
+function categorizeChangeTarget(target, zoneArray){
+    
+    
+    if(target.classList.contains("zone-number")){
+        handleZoneChange(target, zoneArray);
+    }
+    if(target.classList.contains("input-tag")){
+        handleTagChange(target, zoneArray);
+    }
+    
+}
 
-// depending on type of change, select appropriate action (ZC2)
-function handleZoneChange(rowElement, zoneArray) {
+
+
+// depending on type of change, select appropriate action (ZC3-A)
+function handleZoneChange(target, zoneArray) {
+    let rowElement = target.closest(".row");
+
     let newZoneNumber = rowElement.querySelector(".zone-number").value;
     let oldZoneNumber = parseInt(rowElement.querySelector(".zone-number").getAttribute("oldvalue"));
 
@@ -289,7 +333,7 @@ function handleZoneChange(rowElement, zoneArray) {
 
         let newTag1 = rowElement.querySelector(".tag1").value;
         let newTag2 = rowElement.querySelector(".tag2").value;
-        
+
 
         let oldZoneObject = zoneArray.findIndex(obj => obj.zoneNumber == oldZoneNumber)
 
@@ -321,6 +365,26 @@ function handleZoneChange(rowElement, zoneArray) {
 
 
 
+// depending on type of change, select appropriate action (ZC3-B)
+function handleTagChange(target, zoneArray){
+    let rowElement = target.closest(".row");
+    let currentTag = target.classList[0];
+    let targetZoneNum = parseInt(rowElement.querySelector(".zone-number").value);
+
+    console.log(`Zone Number Is: ${currentTag}`)
+
+    let zoneIndex = zoneArray.findIndex(objInArr => objInArr.zoneNumber === targetZoneNum);
+    
+    if (currentTag === "tag1"){
+        zoneArray[zoneIndex].tag1 = rowElement.querySelector(`.${currentTag}`).value;
+    }
+
+    if (currentTag === "tag2"){
+        zoneArray[zoneIndex].tag2 = rowElement.querySelector(`.${currentTag}`).value;
+    }
+
+    console.log(zoneArray);
+} // end handletagchange
 
 
 
@@ -354,7 +418,7 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
     let rowsSmokeHeat = arraySmokeHeat.map(obj => [obj.zoneNumber, obj.tag1, obj.tag2])
 
     let csvContent = "data:text/csv;charset=utf-8,"
-        + rowsCLIP.map(e => e.join(",")).join("\n") 
+        + rowsCLIP.map(e => e.join(",")).join("\n")
         + "\n"
         + rowsSmokeHeat.map(e => e.join(",")).join("\n");
 
