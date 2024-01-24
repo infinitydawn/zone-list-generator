@@ -53,30 +53,30 @@ let smokeHeatObjects = [
 window.addEventListener("load", () => {
     // MODAL CODE --------------------------------------------------------------
     // Get the modal
-    let modal = document.querySelector("#myModal");
+    // let modal = document.querySelector("#myModal");
 
-    // Get the button that opens the modal
-    let btn = document.querySelector("#myBtn");
+    // // Get the button that opens the modal
+    // let btn = document.querySelector("#myBtn");
 
-    // Get the <span> element that closes the modal
-    let span = document.querySelectorAll(".close")[0];
+    // // Get the <span> element that closes the modal
+    // let span = document.querySelectorAll(".close")[0];
 
-    // When the user clicks on the button, open the modal
-    btn.onclick = function () {
-        modal.style.display = "block";
-    }
+    // // When the user clicks on the button, open the modal
+    // btn.onclick = function () {
+    //     modal.style.display = "block";
+    // }
 
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
+    // // When the user clicks on <span> (x), close the modal
+    // span.onclick = function () {
+    //     modal.style.display = "none";
+    // }
 
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
+    // // When the user clicks anywhere outside of the modal, close it
+    // window.onclick = function (event) {
+    //     if (event.target == modal) {
+    //         modal.style.display = "none";
+    //     }
+    // }
 
     // -------------------------------------------------------------------------
 
@@ -348,6 +348,7 @@ function handleZoneChange(target, zoneArray) {
 
     }
     else {
+        // swap zones
 
         let indexAtOrigin = zoneArray.findIndex(zone => zone.zoneNumber === oldZoneNumber);
         let indexAtTarget = zoneArray.findIndex(zone => zone.zoneNumber === targetZone.zoneNumber);
@@ -356,6 +357,8 @@ function handleZoneChange(target, zoneArray) {
         zoneArray[indexAtOrigin].zoneNumber = zoneArray[indexAtTarget].zoneNumber;
 
         zoneArray[indexAtTarget].zoneNumber = tempZoneNumber;
+        
+        window.alert(`Zones ${zoneArray[indexAtOrigin].zoneNumber} and ${zoneArray[indexAtTarget].zoneNumber} were swapped!`);
     }
 
     bubbleSort(zoneArray);
@@ -414,6 +417,10 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
         ["name2", "city2", "more info"]
     ];
 
+    let someString = `avcd	123
+    bnm,	456
+    `;
+
     let rowsCLIP = arrayCLIP.map(obj => [obj.zoneNumber, obj.tag1, obj.tag2])
     let rowsSmokeHeat = arraySmokeHeat.map(obj => [obj.zoneNumber, obj.tag1, obj.tag2])
 
@@ -421,7 +428,13 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
         + rowsCLIP.map(e => e.join(",")).join("\n")
         + "\n"
         + rowsSmokeHeat.map(e => e.join(",")).join("\n");
+    
+    let emailBody =
+        rowsCLIP.map(e => e.join(`%09`)).join(`%0D%0A`)
+        + `%0D%0A`
+        + rowsSmokeHeat.map(e => e.join(`%09`)).join(`%0D%0A`);
 
     let encodedUri = encodeURI(csvContent);
-    window.open(encodedUri);
+    window.location.href = `mailto:mnikulin@sherlocksecuritysystems.com?body=${emailBody}&subject=New Zone List`;
+    // DOWNLOAD FILE - window.open(encodedUri);
 } // end generateCSV()
