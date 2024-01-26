@@ -47,38 +47,54 @@ let smokeHeatObjects = [
     }
 ];
 
+let projectList = [];
+
 
 
 //Code entry point
 window.addEventListener("load", () => {
-    // MODAL CODE --------------------------------------------------------------
-    // Get the modal
-    // let modal = document.querySelector("#myModal");
 
-    // // Get the button that opens the modal
-    // let btn = document.querySelector("#myBtn");
+    saveLocalStorage(clipObjects, smokeHeatObjects, "nameOfProject")
 
-    // // Get the <span> element that closes the modal
-    // let span = document.querySelectorAll(".close")[0];
 
-    // // When the user clicks on the button, open the modal
-    // btn.onclick = function () {
-    //     modal.style.display = "block";
-    // }
 
-    // // When the user clicks on <span> (x), close the modal
-    // span.onclick = function () {
-    //     modal.style.display = "none";
-    // }
 
-    // // When the user clicks anywhere outside of the modal, close it
-    // window.onclick = function (event) {
-    //     if (event.target == modal) {
-    //         modal.style.display = "none";
-    //     }
-    // }
+    //MODAL CODE --------------------------------------------------------------
+    //Get the modal
+    let modal = document.querySelector("#myModal");
 
-    // -------------------------------------------------------------------------
+    // Get the button that opens the modal
+    let btn = document.querySelector("#projects-btn");
+
+    // Get the <span> element that closes the modal
+    let span = document.querySelectorAll(".close")[0];
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    btn.addEventListener("click", ()=>{
+        let feed = document.querySelector(".modal-feed");
+        feed.textContent = Object.keys(localStorage);
+        console.log(Object.keys(localStorage));
+    })
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    //-------------------------------------------------------------------------
+
+
 
     let addBtn = document.querySelector(".add-zone");
     let smokeBtn = document.querySelector("#smk-btn");
@@ -257,15 +273,6 @@ function displayArray(container, objArray, nextClip) {
 function listenInputChange(container) {
     container.addEventListener('change', (event) => {
         if (event.target.classList.contains('input-field')) {
-
-            // if (event.target.classList.contains('zone-number')) {
-            //     routeZoneChange(event.target.closest(".row"));
-            // }
-            // if (event.target.classList.contains('input-tag')) {
-            //     // TODO 
-            //     console.log("tag change registered")
-            // }
-
             // // TODO 
             // // block if zone number too high
             // // add webstorage
@@ -430,11 +437,28 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
         + rowsSmokeHeat.map(e => e.join(",")).join("\n");
     
     let emailBody =
-        rowsCLIP.map(e => e.join(`%09`)).join(`%0D%0A`)
+        rowsCLIP.map(e => e.join(` | `)).join(`%0D%0A`)
         + `%0D%0A`
-        + rowsSmokeHeat.map(e => e.join(`%09`)).join(`%0D%0A`);
+        + rowsSmokeHeat.map(e => e.join(` | `)).join(`%0D%0A`);
 
     let encodedUri = encodeURI(csvContent);
     window.location.href = `mailto:mnikulin@sherlocksecuritysystems.com?body=${emailBody}&subject=New Zone List`;
     // DOWNLOAD FILE - window.open(encodedUri);
 } // end generateCSV()
+
+
+
+
+
+function saveLocalStorage(arr1, arr2, name){
+    let project = {
+        array1: arr1,
+        array2: arr2,
+        name:   name
+    }
+
+    projectString = JSON.stringify(project);
+
+    localStorage.setItem(name, projectString)
+
+}
