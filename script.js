@@ -47,7 +47,6 @@ let smokeHeatObjects = [
     }
 ];
 
-let projectList = [];
 
 
 
@@ -59,7 +58,7 @@ window.addEventListener("load", () => {
 
 
 
-    //MODAL CODE --------------------------------------------------------------
+
     //Get the modal
     let modal = document.querySelector("#myModal");
 
@@ -68,38 +67,19 @@ window.addEventListener("load", () => {
 
     // Get the <span> element that closes the modal
     let span = document.querySelectorAll(".close")[0];
-
-    // When the user clicks on the button, open the modal
-    btn.onclick = function () {
-        modal.style.display = "block";
-    }
-
-    btn.addEventListener("click", ()=>{
-        let feed = document.querySelector(".modal-feed");
-        feed.textContent = Object.keys(localStorage);
-        console.log(Object.keys(localStorage));
-    })
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function () {
-        modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    //-------------------------------------------------------------------------
+    let projectsFeed = document.querySelector(".modal-feed");
 
 
 
     let addBtn = document.querySelector(".add-zone");
+    let addProjBtn = document.querySelector(".add-new-project");
     let smokeBtn = document.querySelector("#smk-btn");
     let dualBtn = document.querySelector("#dual-btn");
     let exportBtn = document.querySelector("#export-btn");
+
+    let selectedProject = document.querySelector(".current-project");
+
+
 
     let smokeContainer = document.querySelector(".smokes");
     let ClipContainer = document.querySelector(".clip");
@@ -158,6 +138,67 @@ window.addEventListener("load", () => {
     exportBtn.addEventListener("click", () => {
         generateCsv(clipObjects, smokeHeatObjects);
     })
+
+
+    //MODAL CODE --------------------------------------------------------------
+
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+
+    btn.addEventListener("click", () => {
+
+        let projectsList = "";
+
+        Object.keys(localStorage).forEach((key) => {
+            projectsList += `<div><p class="project-list-item">${key}</p></div>`
+        })
+        projectsFeed.innerHTML = projectsList;
+        console.log(Object.keys(localStorage));
+    })
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    addProjBtn.addEventListener("click", () => {
+        //handle add project click
+        console.log("Add new project")
+    })
+
+    projectsFeed.addEventListener("click", (event) => {
+        if (event.target.classList.contains("project-list-item")) {
+            console.log(event.target.textContent);
+            saveLocalStorage(clipObjects, smokeHeatObjects, selectedProject.textContent)
+            setCurrentProject(selectedProject, event.target.textContent);
+            modal.style.display = "none";
+            fetchLocalStorage(selectedProject.textContent)
+            let currentContainer = document.querySelector(".container")
+            displayArray(currentContainer, decideContext(currentContainer), 1);
+        }
+    })
+
+    function decideContext(container){
+        if(container.classList.contains("clip")){
+            return clipObjects;
+        }
+        if(container.classList.contains("smoke")){
+            return smokeHeatObjects;
+        }
+    }
+
+    //-------------------------------------------------------------------------
+
 })
 
 
@@ -313,16 +354,16 @@ function categorizeRowChange(target) {
 
 
 // (ZC2)
-function categorizeChangeTarget(target, zoneArray){
-    
-    
-    if(target.classList.contains("zone-number")){
+function categorizeChangeTarget(target, zoneArray) {
+
+
+    if (target.classList.contains("zone-number")) {
         handleZoneChange(target, zoneArray);
     }
-    if(target.classList.contains("input-tag")){
+    if (target.classList.contains("input-tag")) {
         handleTagChange(target, zoneArray);
     }
-    
+
 }
 
 
@@ -364,7 +405,7 @@ function handleZoneChange(target, zoneArray) {
         zoneArray[indexAtOrigin].zoneNumber = zoneArray[indexAtTarget].zoneNumber;
 
         zoneArray[indexAtTarget].zoneNumber = tempZoneNumber;
-        
+
         window.alert(`Zones ${zoneArray[indexAtOrigin].zoneNumber} and ${zoneArray[indexAtTarget].zoneNumber} were swapped!`);
     }
 
@@ -376,7 +417,7 @@ function handleZoneChange(target, zoneArray) {
 
 
 // depending on type of change, select appropriate action (ZC3-B)
-function handleTagChange(target, zoneArray){
+function handleTagChange(target, zoneArray) {
     let rowElement = target.closest(".row");
     let currentTag = target.classList[0];
     let targetZoneNum = parseInt(rowElement.querySelector(".zone-number").value);
@@ -384,12 +425,12 @@ function handleTagChange(target, zoneArray){
     console.log(`Zone Number Is: ${currentTag}`)
 
     let zoneIndex = zoneArray.findIndex(objInArr => objInArr.zoneNumber === targetZoneNum);
-    
-    if (currentTag === "tag1"){
+
+    if (currentTag === "tag1") {
         zoneArray[zoneIndex].tag1 = rowElement.querySelector(`.${currentTag}`).value;
     }
 
-    if (currentTag === "tag2"){
+    if (currentTag === "tag2") {
         zoneArray[zoneIndex].tag2 = rowElement.querySelector(`.${currentTag}`).value;
     }
 
@@ -435,7 +476,7 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
         + rowsCLIP.map(e => e.join(",")).join("\n")
         + "\n"
         + rowsSmokeHeat.map(e => e.join(",")).join("\n");
-    
+
     let emailBody =
         rowsCLIP.map(e => e.join(` | `)).join(`%0D%0A`)
         + `%0D%0A`
@@ -450,15 +491,34 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
 
 
 
-function saveLocalStorage(arr1, arr2, name){
+function saveLocalStorage(arr1, arr2, name) {
     let project = {
         array1: arr1,
         array2: arr2,
-        name:   name
+        name: name
     }
 
     projectString = JSON.stringify(project);
 
     localStorage.setItem(name, projectString)
 
+}
+
+
+function fetchLocalStorage(name) {
+    let project = localStorage.getItem(name);
+    let projectFormatted = JSON.parse(project);
+    let selectedProject = document.querySelector(".current-project");
+
+    console.log(projectFormatted);
+
+    smokeHeatObjects = projectFormatted.array2;
+    clipObjects = projectFormatted.array1;
+    setCurrentProject(selectedProject, name)
+}
+
+
+
+function setCurrentProject(domElement, currentProject) {
+    domElement.textContent = currentProject;
 }
