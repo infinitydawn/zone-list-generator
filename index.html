@@ -20,12 +20,23 @@
 
     <div class="">
         <h1>FX-2000 Zone List Maker</h1>
-        <h2>Mikhail Nikulin</h2>
-        <p>Use this to generate FX2000 zone lists</p>
     </div>
+
+    <hr>
 
     <div class="container clip">
         <h2>CLIP Zones (Dual Mods)</h2>
+        <div>
+            <div>
+                <label for="suggestions">Project </label>
+            <datalist id="suggestions">
+                <option>First option</option>
+                <option>Second Option</option>
+            </datalist>
+            <input  autoComplete="on" list="suggestions"/> 
+        </div>
+        </div>
+        <hr>
         <div class="zones-list">
 
         </div>
@@ -63,7 +74,15 @@
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p>Some text in the Modal..</p>
+            <div class="new-project-section">
+                <input class="input-field">
+                <div class="button">Add</div>
+            </div>
+            <hr>
+            
+            <div class="modal-feed">
+                <p>Some text in the Modal..</p>
+            </div>
         </div>
 
     </div>
