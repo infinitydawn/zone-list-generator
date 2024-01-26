@@ -125,13 +125,14 @@ window.addEventListener("load", () => {
     smokeBtn.addEventListener("click", () => {
         smokeContainer.classList.remove("disabled");
         ClipContainer.classList.add("disabled");
-
+        displayArray(smokeContainer, smokeHeatObjects, 1);
     })
 
     // listen to clicks on clip button
     dualBtn.addEventListener("click", () => {
         ClipContainer.classList.remove("disabled");
         smokeContainer.classList.add("disabled");
+        displayArray(ClipContainer, clipObjects, 1);
     })
 
     // listen to clicks on clip button
@@ -183,16 +184,23 @@ window.addEventListener("load", () => {
             setCurrentProject(selectedProject, event.target.textContent);
             modal.style.display = "none";
             fetchLocalStorage(selectedProject.textContent)
-            let currentContainer = document.querySelector(".container")
+            let currentContainer = document.querySelectorAll(".container")
+            
+            currentContainer = Array.apply(null, currentContainer);
+            console.log(currentContainer)
+            currentContainer = currentContainer.find(container => !container.classList.contains("disabled"));
+            console.log(currentContainer)
             displayArray(currentContainer, decideContext(currentContainer), 1);
         }
     })
 
     function decideContext(container){
         if(container.classList.contains("clip")){
+            console.log("Current context clip");
             return clipObjects;
         }
-        if(container.classList.contains("smoke")){
+        if(container.classList.contains("smokes")){
+            console.log("smoke");
             return smokeHeatObjects;
         }
     }
@@ -510,7 +518,7 @@ function fetchLocalStorage(name) {
     let projectFormatted = JSON.parse(project);
     let selectedProject = document.querySelector(".current-project");
 
-    console.log(projectFormatted);
+    console.log("fetching");
 
     smokeHeatObjects = projectFormatted.array2;
     clipObjects = projectFormatted.array1;
