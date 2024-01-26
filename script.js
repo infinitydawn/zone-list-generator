@@ -468,6 +468,8 @@ function addZone(container, zoneNumber, btnToScrollTo) {
 
 // generate csv file using objects array
 function generateCsv(arrayCLIP, arraySmokeHeat) {
+    let selectedProject = document.querySelector(".current-project");
+
     const rows = [
         ["name1", "city1", "some other info"],
         ["name2", "city2", "more info"]
@@ -491,7 +493,7 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
         + rowsSmokeHeat.map(e => e.join(` | `)).join(`%0D%0A`);
 
     let encodedUri = encodeURI(csvContent);
-    window.location.href = `mailto:mnikulin@sherlocksecuritysystems.com?body=${emailBody}&subject=New Zone List`;
+    window.location.href = `mailto:mnikulin@sherlocksecuritysystems.com?body=${emailBody}&subject=${selectedProject.textContent} - Zone List`;
     // DOWNLOAD FILE - window.open(encodedUri);
 } // end generateCSV()
 
