@@ -1,51 +1,62 @@
-// Test Data
 let clipObjects = [{
-    tag1: "Pull Station",
-    tag2: "Cellar Mech Rm",
-    zoneNumber: 10
-},
-{
-    tag1: "Waterflow",
-    tag2: "Cellar Stairs A",
-    zoneNumber: 1
-}, {
-    tag1: "Valve Tamper",
-    tag2: "Cellar Trash Rm",
-    zoneNumber: 3
-}, {
-    tag1: "Pull Station",
-    tag2: "1FL Main Entrance",
-    zoneNumber: 4
-}, {
-    tag1: "Generator Running",
-    tag2: "1FL Electric Rm",
-    zoneNumber: 6
-}];
-
-let smokeHeatObjects = [
-    {
-        tag1: "Smoke Detector",
-        tag2: "Cellar Electric Rm",
-        zoneNumber: 49
-    },
-    {
-        tag1: "Heat Detector",
-        tag2: "Cellar Kitchen",
+        tag1: "Create NEW Project",
+        tag2: "Create NEW Project",
         zoneNumber: 1
-    }, {
-        tag1: "Heat Detector",
-        tag2: "Cellar Laundry Rm",
-        zoneNumber: 3
-    }, {
-        tag1: "Duct Detector",
-        tag2: "Roof Supply",
-        zoneNumber: 4
-    }, {
-        tag1: "Smoke Detector",
-        tag2: "Elevator Lobby",
-        zoneNumber: 6
-    }
-];
+    }];
+let smokeHeatObjects = [{
+            tag1: "Create NEW Project",
+            tag2: "Create NEW Project",
+            zoneNumber: 1
+        }];
+
+// Test Data
+// let clipObjects = [{
+//     tag1: "Pull Station",
+//     tag2: "Cellar Mech Rm",
+//     zoneNumber: 10
+// },
+// {
+//     tag1: "Waterflow",
+//     tag2: "Cellar Stairs A",
+//     zoneNumber: 1
+// }, {
+//     tag1: "Valve Tamper",
+//     tag2: "Cellar Trash Rm",
+//     zoneNumber: 3
+// }, {
+//     tag1: "Pull Station",
+//     tag2: "1FL Main Entrance",
+//     zoneNumber: 4
+// }, {
+//     tag1: "Generator Running",
+//     tag2: "1FL Electric Rm",
+//     zoneNumber: 6
+// }];
+
+// let smokeHeatObjects = [
+//     {
+//         tag1: "Smoke Detector",
+//         tag2: "Cellar Electric Rm",
+//         zoneNumber: 49
+//     },
+//     {
+//         tag1: "Heat Detector",
+//         tag2: "Cellar Kitchen",
+//         zoneNumber: 1
+//     }, {
+//         tag1: "Heat Detector",
+//         tag2: "Cellar Laundry Rm",
+//         zoneNumber: 3
+//     }, {
+//         tag1: "Duct Detector",
+//         tag2: "Roof Supply",
+//         zoneNumber: 4
+//     }, {
+//         tag1: "Smoke Detector",
+//         tag2: "Elevator Lobby",
+//         zoneNumber: 6
+//     }
+// ];
 
 
 
@@ -53,7 +64,21 @@ let smokeHeatObjects = [
 //Code entry point
 window.addEventListener("load", () => {
 
-    saveLocalStorage(clipObjects, smokeHeatObjects, "nameOfProject")
+
+    // initialize storage on load --------------------------------------------------------------------
+    console.log(Object.keys(localStorage).filter(key => key.includes("-FX2000")))
+    if(Object.keys(localStorage).filter(key => key.includes("-FX2000")).length > 0){
+        console.log("exists")
+        let prjToLoad = Object.keys(localStorage).find(key => !key.includes("PLEASE CREATE A NEW PROJECT"))
+        fetchLocalStorage(prjToLoad)
+    } else {
+        console.log("does not exists")
+        saveLocalStorage(clipObjects, smokeHeatObjects, "PLEASE CREATE A NEW PROJECT (PROJECTS BTN)")
+        fetchLocalStorage("PLEASE CREATE A NEW PROJECT (PROJECTS BTN)")
+    }
+    // -----------------------------------------------------------------------------------------------
+    
+    
 
 
 
@@ -154,7 +179,10 @@ window.addEventListener("load", () => {
         let projectsList = "";
 
         Object.keys(localStorage).forEach((key) => {
-            projectsList += `<div><p class="project-list-item">${key}</p></div>`
+            if (key.includes("-FX2000")) {
+
+                projectsList += `<div><p class="project-list-item">${key}</p></div>`
+            }
         })
         projectsFeed.innerHTML = projectsList;
         console.log(Object.keys(localStorage));
@@ -172,20 +200,53 @@ window.addEventListener("load", () => {
         }
     }
 
+    // add project action in the modal
     addProjBtn.addEventListener("click", () => {
         //handle add project click
-        console.log("Add new project")
+
+        let newProjInput = document.querySelector(".new-project-input");
+
+        if (newProjInput.value !== "") {
+            // DUPLICATE A (make function)
+            saveLocalStorage([{
+                tag1: "",
+                tag2: "",
+                zoneNumber: 1
+            }], [{
+                tag1: "",
+                tag2: "",
+                zoneNumber: 1
+            }], 
+            newProjInput.value);
+
+            setCurrentProject(selectedProject, newProjInput.value);
+            modal.style.display = "none";
+            fetchLocalStorage(newProjInput.value)
+            let currentContainer = document.querySelectorAll(".container")
+
+            currentContainer = Array.apply(null, currentContainer);
+            console.log(currentContainer)
+            currentContainer = currentContainer.find(container => !container.classList.contains("disabled"));
+            console.log(currentContainer)
+            displayArray(currentContainer, decideContext(currentContainer), 1);
+
+        } else {
+            window.alert("Input Can't Be Empty!")
+        }
+
     })
 
+    // listen to clicks on projects in the modal 
     projectsFeed.addEventListener("click", (event) => {
         if (event.target.classList.contains("project-list-item")) {
+            // DUPLICATE A (make function)
             console.log(event.target.textContent);
             saveLocalStorage(clipObjects, smokeHeatObjects, selectedProject.textContent)
             setCurrentProject(selectedProject, event.target.textContent);
             modal.style.display = "none";
             fetchLocalStorage(selectedProject.textContent)
             let currentContainer = document.querySelectorAll(".container")
-            
+
             currentContainer = Array.apply(null, currentContainer);
             console.log(currentContainer)
             currentContainer = currentContainer.find(container => !container.classList.contains("disabled"));
@@ -194,12 +255,13 @@ window.addEventListener("load", () => {
         }
     })
 
-    function decideContext(container){
-        if(container.classList.contains("clip")){
+    // helper to decide the type of zone added
+    function decideContext(container) {
+        if (container.classList.contains("clip")) {
             console.log("Current context clip");
             return clipObjects;
         }
-        if(container.classList.contains("smokes")){
+        if (container.classList.contains("smokes")) {
             console.log("smoke");
             return smokeHeatObjects;
         }
@@ -312,7 +374,8 @@ function displayArray(container, objArray, nextClip) {
     let zoneNumberFields = Array.apply(null, document.querySelectorAll(".zone-number"));
     let scrollTargetElem = zoneNumberFields.find(elem => elem.value == nextClip) ?? zoneNumberFields[zoneNumberFields.length - 1];
 
-    scrollTargetElem.scrollIntoView();
+    scrollTargetElem === undefined ? console.log("undefiend target scroll elem") : scrollTargetElem.scrollIntoView();
+
 } // end displayArray()
 
 
@@ -502,21 +565,36 @@ function generateCsv(arrayCLIP, arraySmokeHeat) {
 
 
 function saveLocalStorage(arr1, arr2, name) {
-    let project = {
-        array1: arr1,
-        array2: arr2,
-        name: name
+
+    // clean up storage
+    Object.keys(localStorage).filter(key => key.includes("-FX2000")) > 1 ? console.log("No older projects detected") : localStorage.removeItem("PLEASE CREATE A NEW PROJECT (PROJECTS BTN)-FX2000");
+
+    console.log(`name is:${name}`);
+    if (name === "") {
+        console.log("project not saved (empty name string)");
+    } else {
+        console.log("saving")
+        let project = {
+            array1: arr1,
+            array2: arr2,
+            name: name
+        }
+
+        console.log(project)
+
+        projectString = JSON.stringify(project);
+
+        name = name.includes("-FX2000") ? name : name + "-FX2000";
+  
+        localStorage.setItem(name, projectString)
     }
-
-    projectString = JSON.stringify(project);
-
-    localStorage.setItem(name, projectString)
-
 }
 
 
 function fetchLocalStorage(name) {
+    name = name.includes("-FX2000") ? name : name + "-FX2000";
     let project = localStorage.getItem(name);
+    console.log(`fetching name: ${name}`);
     let projectFormatted = JSON.parse(project);
     let selectedProject = document.querySelector(".current-project");
 
