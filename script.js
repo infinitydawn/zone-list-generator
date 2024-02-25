@@ -144,6 +144,9 @@ window.addEventListener("load", () => {
 
         } else if (zonesContainer.classList.contains("smokes")) { window.alert("No more available smoke zones!") }
 
+
+        saveLocalStorage(clipObjects, smokeHeatObjects, document.querySelector(".current-project").textContent)
+
     })
 
     // Listen to click on smokes button
@@ -181,7 +184,7 @@ window.addEventListener("load", () => {
         Object.keys(localStorage).forEach((key) => {
             if (key.includes("-FX2000")) {
 
-                projectsList += `<div><p class="project-list-item">${key}</p></div>`
+                projectsList += `<div class="project-row"><p class="project-list-item">${key}</p><i style="font-size:24px" class="fa">&#xf014;</i></div>`
             }
         })
         projectsFeed.innerHTML = projectsList;
@@ -482,6 +485,7 @@ function handleZoneChange(target, zoneArray) {
 
     bubbleSort(zoneArray);
     displayArray(rowElement.closest(".container"), zoneArray, 1);
+    saveLocalStorage(clipObjects, smokeHeatObjects, document.querySelector(".current-project").textContent)
 } //end handleZoneChange()
 
 
@@ -506,6 +510,7 @@ function handleTagChange(target, zoneArray) {
     }
 
     console.log(zoneArray);
+    saveLocalStorage(clipObjects, smokeHeatObjects, document.querySelector(".current-project").textContent)
 } // end handletagchange
 
 
